@@ -1,24 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Angular HTML5 Preview, Crop And Upload</title>
+	<title>Canvas FileUpload Preview</title>
 	<style>
 		body {
 			padding: 50px;
 			font: 16px Helvetica;
-		}
-
-		.dragArea {
-			background-color: #efefef;
-			border: 3px dashed #cccccc;
-			border-radius: 10px;
-			text-align: center;
-			padding: 50px;
-		}
-
-		.dragArea.over {
-			border-color: #ff0000;
-			background-color: #FFE9EA;
 		}
 
 		.resultImageWrapper {
@@ -34,48 +21,33 @@
 </head>
 <body>
 
-<div class="dragArea">
-	<h3>Drag & Drop File Here</h3>
-	<h4>Or Select File:</h4>
+<div>
+	<h4>Step1 上傳圖檔</h4>
 	<div>
 		<input type="file" id="imageFile"/>
 	</div>
-</div>
+
+	<h4>Step2 取得圖檔內容</h4>
+	<div>
+		<button id="getimg" type="button">取得圖檔內容供上傳</button>
+		<textarea id="base64content" rows="7" cols="100">
+
+		</textarea>
+	</div>
+
+	<h4>Step3 線上轉換</h4>
+	<div>
+		<a href="https://codebeautify.org/base64-to-image-converter" target="_blank">線上轉換</a>
+	</div>
 
 <div class="resultImageWrapper">
-	<img src="" alt="" id="resultImage" width="500" />
+	<img src="" alt="" id="resultImage" />
 </div>
 
-<script src="//code.jquery.com/jquery-2.1.0.min.js"></script>
+<script src="//code.jquery.com/jquery-3.5.1.min.js"></script>
 <script>
-	// Required for drag and drop file access
-	jQuery.event.props.push('dataTransfer');
-
 	$(function(){
-		var dropTimer;
-		var dropTarget = $('.dragArea');
-		var fileInput = $('#imageFile');
-
-		dropTarget.on("dragover", function(event) {
-			clearTimeout(dropTimer);
-			if (event.currentTarget == dropTarget[0]) {
-				dropTarget.addClass('over');
-			}
-
-			return false; // Required for drop to work
-		});
-
-		dropTarget.on('dragleave', function(event) {
-			if (event.currentTarget == dropTarget[0]) {
-				dropTimer = setTimeout(function() {
-					dropTarget.removeClass('over');
-				}, 200);
-			}
-		});
-
 		handleDrop = function(files){
-			dropTarget.removeClass('over');
-
 			var file = files[0]; // Multiple files can be dropped. Lets only deal with the "first" one.
 
 			if (file.type.match('image.*')) {
@@ -88,13 +60,14 @@
 			}
 		};
 
-		dropTarget.on('drop', function(event) {
-			event.preventDefault(); // Or else the browser will open the file
-			handleDrop(event.dataTransfer.files);
+		$('#imageFile').on('change', function(event) {
+			handleDrop(event.target.files);
 		});
 
-		fileInput.on('change', function(event) {
-			handleDrop(event.target.files);
+		$('#getimg').on('click', function(event) {
+			var content = $("#resultImage").attr("src");
+			content = content.replace(/^.*,/,'');
+			$("#base64content").val(content);
 		});
 
 		resizeImage = function(file, size, callback) {
@@ -134,6 +107,8 @@
 			}
 		};
 	});
+
+
 </script>
 
 </body>
