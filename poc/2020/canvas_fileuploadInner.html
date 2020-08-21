@@ -24,7 +24,10 @@
 <div>
 	<h4>Step1 上傳圖檔</h4>
 	<div>
+		縮圖後的寬度<input type="text" id="imgwidth" value="1000"/>px
+		<br/><br/>
 		<input type="file" id="imageFile"/>
+		
 	</div>
 
 	<h4>Step2 取得圖檔內容</h4>
@@ -33,6 +36,8 @@
 		<textarea id="base64content" rows="7" cols="100">
 
 		</textarea>
+		<br>
+		圖檔大小<span id="finalsize"></span>KB
 	</div>
 
 	<h4>Step3 線上轉換</h4>
@@ -67,9 +72,10 @@ Android 三星網際網路: ok(12.1.1.3)
 	$(function(){
 		handleDrop = function(files){
 			var file = files[0]; // Multiple files can be dropped. Lets only deal with the "first" one.
+			var imgwidth= parseInt($("#imgwidth").val(),10);
 
 			if (file.type.match('image.*')) {
-				resizeImage(file, 1000, function(result) {
+				resizeImage(file, imgwidth, function(result) {
 					$('#resultImage').attr('src', result);
 					$('.resultImageWrapper').show();
 				});
@@ -86,6 +92,7 @@ Android 三星網際網路: ok(12.1.1.3)
 			var content = $("#resultImage").attr("src");
 			content = content.replace(/^.*,/,'');
 			$("#base64content").val(content);
+			$("#finalsize").html(parseInt(content.length/1024),10);
 		});
 
 		resizeImage = function(file, size, callback) {
