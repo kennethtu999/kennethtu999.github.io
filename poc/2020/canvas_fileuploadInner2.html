@@ -48,7 +48,7 @@
 		圖檔大小<span id="finalsize"></span>KB
 		</div>
 
-			
+		
 		</form>
 	</div>
 
@@ -104,7 +104,7 @@ Android 三星網際網路: ok(12.1.1.3)
 			var content = $("#resultImage").attr("src");
 			content = content.replace(/^.*,/,'');
 			$("#base64content").val(content);
-			$("#finalsize").html(parseInt(content.length/1024),10);
+			$("#finalsize").html(parseInt($("#base64content").val().length/1024),10);
 		});
 
 		resizeImage = function(file, size, callback) {
